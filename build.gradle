@@ -1,0 +1,90 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.first'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// 프론트엔드 경로 정의
+def frontendDir = "$projectDir/src/main/reactboard"
+
+
+// 리소스 경로 설정
+sourceSets {
+	main {
+		resources {
+			srcDirs = ["$projectDir/src/main/resources"]
+		}
+	}
+}
+
+// React 프로젝트 폴더에서 npm install을 실행해 필요한 패키지를 설치
+tasks.register("installReact", Exec) {
+	workingDir(frontendDir)
+	inputs.dir(frontendDir)
+	group = BasePlugin.BUILD_GROUP
+	if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
+		commandLine("npm.cmd", "audit", "fix")
+		commandLine("npm.cmd", "install")
+	} else {
+		commandLine("npm", "audit", "fix")
+		commandLine("npm", "install")
+	}
+}
+
+// React 프로젝트에서 npm run build를 실행해서 build/ 폴더 생성
+tasks.register("buildReact", Exec) {
+	dependsOn("installReact")
+	workingDir(frontendDir)
+	inputs.dir(frontendDir)
+	group = BasePlugin.BUILD_GROUP
+	if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
+		commandLine("npm.cmd", "run-script", "build")
+	} else {
+		commandLine("npm", "run-script", "build")
+	}
+}
+
+// 빌드 순서 지정
+tasks.register("copyReactBuildFiles", Copy) {
+	dependsOn("buildReact")
+	from("$frontendDir/build")
+	into("$projectDir/src/main/resources/static")
+}
+
+// processResources 실행 전에 copyReactBuildFiles를 반드시 실행하도록 설정
+tasks.named("processResources") {
+	dependsOn("copyReactBuildFiles")
+}
