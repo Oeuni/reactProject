@@ -2,6 +2,7 @@ package com.first.exam.user.entity;
 
 import com.first.exam.board.entity.Board;
 import com.first.exam.common.entity.BaseTimeEntity;
+import com.first.exam.user.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,4 +47,13 @@ public class User extends BaseTimeEntity {
     // 1명당 여러개의 글 작성 가능
     @OneToMany(mappedBy = "user")
     private List<Board> boards = new ArrayList<>();
+
+    public static User fromDTO(UserDTO dto) {
+        return User.builder()
+                .userid(dto.getUserid())
+                .usernm(dto.getUsernm())
+                .password(dto.getPassword())
+                .adminyn(dto.getAdminyn())
+                .build();
+    }
 }

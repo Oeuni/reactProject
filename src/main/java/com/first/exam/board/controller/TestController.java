@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @PostMapping("/user")
+    @PostMapping("/test")
     public ResponseEntity<Msg> sendSms(@RequestBody TestDto testDto) {
         String s = testDto.getAnswer();
         log.info("입력 : " + s);

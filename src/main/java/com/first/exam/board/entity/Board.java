@@ -1,6 +1,8 @@
 package com.first.exam.board.entity;
 
+import com.first.exam.board.dto.BoardDTO;
 import com.first.exam.common.entity.BaseTimeEntity;
+import com.first.exam.user.dto.UserDTO;
 import com.first.exam.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,4 +43,14 @@ public class Board extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String bigo;                                // 내용
+
+    public static Board fromDTO(BoardDTO dto, User user) {
+        return Board.builder()
+                .seqno(dto.getSeqno())
+                .user(user)
+                .category(dto.getCategory())
+                .title(dto.getTitle())
+                .bigo(dto.getBigo())
+                .build();
+    }
 }
