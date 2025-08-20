@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * packageName    : com.first.exam.board.controller
@@ -116,4 +118,19 @@ public class BoardController {
         boolean result = boardService.deleteBoard(seqno, sessionUserId);
         return ResponseEntity.ok(new Msg(result ? "게시글이 성공적으로 삭제되었습니다." : "게시글 삭제에 실패하였습니다.", result));
     }
+
+    // 로그인 여부 확인
+    @GetMapping("/auth/check")
+    public ResponseEntity<Map<String, Object>> checkLogin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Map<String, Object> response = new HashMap<>();
+        if (session != null && session.getAttribute("userId") != null) {
+            response.put("loggedIn", true);
+            response.put("userId", session.getAttribute("userId"));
+        } else {
+            response.put("loggedIn", false);
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }

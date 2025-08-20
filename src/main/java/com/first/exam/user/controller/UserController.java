@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
@@ -64,7 +65,7 @@ public class UserController {
             session.setAttribute("userId", loginDTO.getUserid());
             session.setMaxInactiveInterval(1800);                          // Session이 30분동안 유지
         }
-        return ResponseEntity.ok().body(new Msg(result ? "로그인 성공" : "로그인 실패", result));
+        return ResponseEntity.ok().body(new Msg(result ? "로그인 성공" : "아이디 또는 비밀번호가 올바르지 않습니다.", result));
     }
 
     // 로그아웃

@@ -5,7 +5,10 @@ import axios from "axios";
 function BoardList() {
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false); // 로그인 상태
+  const [userId, setUserId] = useState("");        // 로그인한 사용자 아이디
 
+  // 게시글 로딩
   useEffect(() => {
     axios
       .get("http://localhost:8080/board", { withCredentials: true })
@@ -19,19 +22,61 @@ function BoardList() {
       });
   }, []);
 
+  // 로그인 상태 확인
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/auth/check", { withCredentials: true })
+      .then((res) => {
+        if (res.data.loggedIn) {
+          setLoggedIn(true);
+          setUserId(res.data.userId);
+        } else {
+          setLoggedIn(false);
+        }
+      })
+      .catch((err) => console.error("로그인 체크 실패:", err));
+  }, []);
+
+  // 로그아웃 처리
+  const handleLogout = () => {
+    axios.post("http://localhost:8080/logout", {}, { withCredentials: true })
+      .then(() => {
+        setLoggedIn(false);
+        setUserId("");
+        window.location.reload();
+      })
+      .catch((err) => console.error("로그아웃 실패:", err));
+  };
+
+    // 글 작성 버튼 눌렀을 때
+    const writeCheck = () => {
+      if (loggedIn) {
+        window.location.href = "/board";
+      }
+      else {
+        alert("로그인이 필요한 서비스입니다.");
+        window.location.href = "/login";
+      }
+    };
+
   if (loading) return <div>게시글을 불러오는 중...</div>;
 
   return (
     <div style={{ padding: "20px" }}>
       {/* 상단 버튼 영역 */}
       <div className="top-buttons">
-        <button onClick={() => window.location.href="/login"}>로그인</button>
-        <button onClick={() => window.location.href="/join"}>회원가입</button>
-      </div>
-
-      {/* 글 작성 버튼 */}
-      <div className="write-button">
-        <button onClick={() => window.location.href="/board"}>글 작성</button>
+        {loggedIn ? (
+          <>
+            <span>{userId}님 환영합니다 😊</span>
+            <button onClick={handleLogout}>로그아웃</button>
+          </>
+        ) : (
+          <>
+            <button onClick={() => (window.location.href = "/login")}>로그인</button>
+            <button onClick={() => (window.location.href = "/join")}>회원가입</button>
+          </>
+        )}
+        <button onClick={writeCheck}>글 작성</button>
       </div>
 
       <h1>게시글 목록</h1>
