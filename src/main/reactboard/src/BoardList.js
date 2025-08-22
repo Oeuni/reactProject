@@ -105,7 +105,7 @@ function BoardList() {
               >
                 <td>{board.seqno}</td>
                 <td>{board.username}</td>
-                <td>{board.category}</td>
+                <td>{board.category === "F" ? "자유게시판" : board.category}</td>
                 <td>{board.title}</td>
                 <td>{board.bigo}</td>
               </tr>
