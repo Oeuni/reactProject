@@ -37,54 +37,14 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// ===========================
+// React 관련 task 제거/비활성화
+// ===========================
+
 // 프론트엔드 경로 정의
 def frontendDir = "$projectDir/src/main/reactboard"
 
-
-// 리소스 경로 설정
-sourceSets {
-	main {
-		resources {
-			srcDirs = ["$projectDir/src/main/resources"]
-		}
-	}
-}
-
-// React 프로젝트 폴더에서 npm install을 실행해 필요한 패키지를 설치
-tasks.register("installReact", Exec) {
-	workingDir(frontendDir)
-	inputs.dir(frontendDir)
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
-		commandLine("npm.cmd", "audit", "fix")
-		commandLine("npm.cmd", "install")
-	} else {
-		commandLine("npm", "audit", "fix")
-		commandLine("npm", "install")
-	}
-}
-
-// React 프로젝트에서 npm run build를 실행해서 build/ 폴더 생성
-tasks.register("buildReact", Exec) {
-	dependsOn("installReact")
-	workingDir(frontendDir)
-	inputs.dir(frontendDir)
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
-		commandLine("npm.cmd", "run-script", "build")
-	} else {
-		commandLine("npm", "run-script", "build")
-	}
-}
-
-// 빌드 순서 지정
-tasks.register("copyReactBuildFiles", Copy) {
-	dependsOn("buildReact")
-	from("$frontendDir/build")
-	into("$projectDir/src/main/resources/static")
-}
-
-// processResources 실행 전에 copyReactBuildFiles를 반드시 실행하도록 설정
-tasks.named("processResources") {
-	dependsOn("copyReactBuildFiles")
-}
+// 로컬에서 이미 build가 완료되었다면 Gradle 빌드에 포함하지 않음
+// tasks.register("installReact", Exec) { ... }   // 제거
+// tasks.register("buildReact", Exec) { ... }     // 제거
+// tasks.register("copyReactBuildFiles", Copy) { ... }  // 제거
