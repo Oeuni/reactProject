@@ -18,7 +18,8 @@ function Join() {
       return;
     }
     try {
-      const res = await axios.get(`http://localhost:8080/user`, {
+      const res = await axios.get("http://13.49.228.166:8080/user", {
+      //const res = await axios.get(`http://localhost:8080/user`, {
         params: { userid },
       });
     setCheckMsg(res.data.msg);
@@ -39,7 +40,8 @@ function Join() {
   const handleJoin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/join", {
+      const res = await axios.post("http://13.49.228.166:8080/join", {
+    //const res = await axios.post("http://backend:8080/join", {
         userid,
         password,
         username,

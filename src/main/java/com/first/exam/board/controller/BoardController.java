@@ -32,10 +32,8 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(
-        origins = "http://localhost:3000",
-        allowCredentials = "true"
-)
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://13.49.228.166", allowCredentials = "true")
 public class BoardController {
 
     private final BoardService boardService;

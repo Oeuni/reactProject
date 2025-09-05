@@ -1,3 +1,4 @@
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.4'
@@ -7,15 +8,10 @@ plugins {
 group = 'com.first'
 version = '0.0.1-SNAPSHOT'
 
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
 	}
 }
 
@@ -33,18 +29,50 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-// ===========================
-// React 관련 task 제거/비활성화
-// ===========================
-
-// 프론트엔드 경로 정의
 def frontendDir = "$projectDir/src/main/reactboard"
 
-// 로컬에서 이미 build가 완료되었다면 Gradle 빌드에 포함하지 않음
-// tasks.register("installReact", Exec) { ... }   // 제거
-// tasks.register("buildReact", Exec) { ... }     // 제거
-// tasks.register("copyReactBuildFiles", Copy) { ... }  // 제거
+
+// React 빌드 파일 삭제
+task cleanReactBuild(type: Delete) {
+	delete "$projectDir/src/main/resources/static/*"
+}
+
+// React 설치
+task installReact(type: Exec) {
+	workingDir frontendDir
+	group = "build"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'npm install'
+	} else {
+		commandLine 'npm', 'install'
+	}
+}
+
+// React 빌드
+task buildReact(type: Exec) {
+	dependsOn installReact
+	workingDir frontendDir
+	group = "build"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'npm run build'
+	} else {
+		commandLine 'npm', 'run', 'build'
+	}
+}
+
+// React 빌드 파일 복사
+task copyReactBuildFiles(type: Copy) {
+	dependsOn buildReact
+	from "$frontendDir/build/"
+	into "$projectDir/src/main/resources/static"
+}
+
+// processResources task에 연결
+tasks.named("processResources") {
+	dependsOn copyReactBuildFiles
+}
+
+// bootRun task에 연결
+tasks.named("bootRun") {
+	dependsOn copyReactBuildFiles
+}

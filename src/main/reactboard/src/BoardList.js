@@ -1,8 +1,10 @@
 import './BoardList.css';
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function BoardList() {
+  const navigate = useNavigate();
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false); // 로그인 상태
@@ -11,7 +13,8 @@ function BoardList() {
   // 게시글 로딩
   useEffect(() => {
     axios
-      .get("http://localhost:8080/board", { withCredentials: true })
+      .get("/board", { withCredentials: true })
+      //.get("http://localhost:8080/board", { withCredentials: true })
       .then((response) => {
         setBoards(response.data);
         setLoading(false);
@@ -25,7 +28,8 @@ function BoardList() {
   // 로그인 상태 확인
   useEffect(() => {
     axios
-      .get("http://localhost:8080/auth/check", { withCredentials: true })
+      .get("/auth/check", { withCredentials: true })
+      //.get("http://localhost:8080/auth/check", { withCredentials: true })
       .then((res) => {
         if (res.data.loggedIn) {
           setLoggedIn(true);
@@ -39,7 +43,8 @@ function BoardList() {
 
   // 로그아웃 처리
   const handleLogout = () => {
-    axios.post("http://localhost:8080/logout", {}, { withCredentials: true })
+    axios.post("/logout", {}, { withCredentials: true })
+    //axios.post("http://localhost:8080/logout", {}, { withCredentials: true })
       .then(() => {
         setLoggedIn(false);
         setUserId("");
@@ -51,11 +56,12 @@ function BoardList() {
     // 글 작성 버튼 눌렀을 때
     const writeCheck = () => {
       if (loggedIn) {
-        window.location.href = "/board";
+        navigate("/board");
       }
       else {
         alert("로그인이 필요한 서비스입니다.");
-        window.location.href = "/login";
+        //window.location.href = "/login";
+        navigate("/login");
       }
     };
 
@@ -72,8 +78,10 @@ function BoardList() {
           </>
         ) : (
           <>
-            <button onClick={() => (window.location.href = "/login")}>로그인</button>
-            <button onClick={() => (window.location.href = "/join")}>회원가입</button>
+            {/*<button onClick={() => (window.location.href = "/login")}>로그인</button>*/}
+            <button onClick={() => navigate("/login")}>로그인</button>
+            {/*<button onClick={() => (window.location.href = "/join")}>회원가입</button>*/}
+            <button onClick={() => navigate("/join")}>회원가입</button>
           </>
         )}
         <button onClick={writeCheck}>글 작성</button>
@@ -101,7 +109,7 @@ function BoardList() {
                 key={board.seqno}
                 className="board-row"
                 style={{ cursor: "pointer" }}
-                onClick={() => (window.location.href = `/board/${board.seqno}`)}
+                onClick={() => navigate(`/board/${board.seqno}`)}
               >
                 <td>{board.seqno}</td>
                 <td>{board.username}</td>
