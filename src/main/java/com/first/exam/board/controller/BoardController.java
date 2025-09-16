@@ -33,7 +33,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 //@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-@CrossOrigin(origins = "http://13.49.228.166", allowCredentials = "true")
+@CrossOrigin(origins = "http://13.53.74.46", allowCredentials = "true")
 public class BoardController {
 
     private final BoardService boardService;

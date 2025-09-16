@@ -22,7 +22,7 @@ function BoardDetail() {
   // 게시글 상세 조회
   useEffect(() => {
     axios
-      .get(`http://13.49.228.166:8080/board/${id}`, { withCredentials: true })
+      .get(`http://13.53.74.46:8080/board/${id}`, { withCredentials: true })
       //.get(`http://localhost:8080/board/${id}`, { withCredentials: true })
       .then((res) => {
         console.log("data :: ", res.data);
@@ -42,7 +42,7 @@ function BoardDetail() {
   // 로그인 + 권한 확인
   useEffect(() => {
     axios
-      .get(`http://13.49.228.166:8080/board/${id}/check`, { withCredentials: true })
+      .get(`http://13.53.74.46:8080/board/${id}/check`, { withCredentials: true })
       //.get(`http://localhost:8080/board/${id}/check`, { withCredentials: true })
       .then((res) => {
         setIsLoggedIn(true);
@@ -58,7 +58,7 @@ function BoardDetail() {
   const handleSave = () => {
     axios
       .put(
-        `http://13.49.228.166:8080/board/${id}`,
+        `http://13.53.74.46:8080/board/${id}`,
         //`http://localhost:8080/board/${id}`,
         { seqno: id, category, title, bigo },
         { withCredentials: true }
@@ -80,7 +80,7 @@ function BoardDetail() {
   const handleDelete = () => {
     if (window.confirm("삭제하시겠습니까?")) {
       axios
-        .delete(`http://13.49.228.166:8080/board/${id}`, { withCredentials: true })
+        .delete(`http://13.53.74.46:8080/board/${id}`, { withCredentials: true })
         //.delete(`http://localhost:8080/board/${id}`, { withCredentials: true })
         .then((res) => {
           alert(res.data.msg);
