@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - master  # master 브랜치에 push 시 배포 실행
+      - master   # master 브랜치에 push 시 배포 실행
 
 jobs:
   build-and-deploy:
@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Gradle 빌드 (jar 생성)
+      # 3. 실행권한 부여 및 Gradle 빌드 (jar 생성)
       - name: Make Gradle Wrapper executable
         run: chmod +x ./gradlew
   
@@ -38,7 +38,7 @@ jobs:
           source: "build/libs/exam-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/"
 
-      # 5. EC2 서버에서 실행 (기존 프로세스 종료 후 새로 실행)
+      # 5. EC2 서버에서 실행 (기존 프로세스 종료 후 새로 nohup 실행)
       - name: Restart app on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -46,12 +46,12 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 기존 jar 프로세스 종료
+            # 기존 실행 중인 jar 종료
             pids=$(pgrep -f "exam-0.0.1-SNAPSHOT.jar")
             if [ -n "$pids" ]; then
               kill -9 $pids
             fi
 
-            # 새로 실행 (setsid 사용, 백그라운드, 로그 저장)
-            setsid java -Xms256m -Xmx512m -jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar \
-              > /home/ec2-user/app.log 2>&1 < /dev/null &
+            # 새로 실행 (nohup, 백그라운드, 로그 저장)
+            nohup java -Xms256m -Xmx512m -jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar \
+              > /home/ec2-user/app.log 2>&1 &
