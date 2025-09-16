@@ -16,7 +16,7 @@ function CreateBoard() {
 
     try {
       const response = await axios.post(
-        "http://13.49.228.166:8080/board",
+        "http://13.53.74.46:8080/board",
         //"/board",
         {
           category,
