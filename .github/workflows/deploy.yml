@@ -21,7 +21,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Gradle 빌드 (jar 생성)
+      # 3. 실행권한 부여 및 Gradle 빌드 (jar 생성)
+      - name: Make Gradle Wrapper executable
+        run: chmod +x ./gradlew
+  
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
