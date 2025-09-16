@@ -21,14 +21,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. 실행권한 부여 및 Gradle 빌드 (jar 생성)
+      # 3. Gradle 빌드 (jar 생성)
       - name: Make Gradle Wrapper executable
         run: chmod +x ./gradlew
-  
+
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # 4. EC2 서버에 .jar 파일 복사
+      # 4. EC2 서버에 .jar 파일 복사 (tar 없이)
       - name: Copy jar to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -36,11 +36,11 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "build/libs/exam-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/"
-          tar: false          # 압축하지 않음
-          overwrite: true     # 기존 파일 덮어쓰기
+          target: "/home/ec2-user/exam-0.0.1-SNAPSHOT.jar"
+          overwrite: true
+          debug: true
 
-      # 5. EC2 서버에서 실행 (기존 프로세스 종료 후 새로 실행)
+      # 5. EC2 systemd 서비스 재시작
       - name: Restart app on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -48,8 +48,4 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 기존 jar 파일 덮어쓰기
-            mv /home/ec2-user/exam-0.0.1-SNAPSHOT.jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar.bak || true
-            # 새 파일은 SCP로 이미 복사됨
-            # systemd 서비스 재시작
             sudo systemctl restart exam
