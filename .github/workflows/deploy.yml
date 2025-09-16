@@ -36,9 +36,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "build/libs/exam-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/exam-0.0.1-SNAPSHOT.jar"
-          overwrite: true
-          debug: true
+          target: "/home/ec2-user/"
 
       # 5. EC2 systemd 서비스 재시작
       - name: Restart app on EC2
@@ -48,4 +46,11 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo systemctl restart exam
+            # 기존 실행 중인 프로세스 종료
+            pids=$(pgrep -f "exam-0.0.1-SNAPSHOT.jar")
+            if [ -n "$pids" ]; then
+              kill -9 $pids
+            fi
+            # 새로 실행 (setsid 사용, 백그라운드, 로그 저장)
+            setsid java -jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar > /home/ec2-user/app.log 2>&1 < /dev/null &
+      
