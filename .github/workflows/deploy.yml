@@ -46,10 +46,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 기존 실행 중인 프로세스 종료
-            pids=$(pgrep -f "exam-0.0.1-SNAPSHOT.jar")
-            if [ -n "$pids" ]; then
-              kill -9 $pids
-            fi
-            # 새로 실행 (setsid 사용, 백그라운드, 로그 저장)
-            setsid java -Xms256m -Xmx512m -jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar > /home/ec2-user/app.log 2>&1 < /dev/null &
+            # 기존 jar 파일 덮어쓰기
+            mv /home/ec2-user/exam-0.0.1-SNAPSHOT.jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar.bak || true
+            # 새 파일은 SCP로 이미 복사됨
+            # systemd 서비스 재시작
+            sudo systemctl restart exam
