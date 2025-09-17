@@ -87,7 +87,7 @@ function BoardList() {
         <button onClick={writeCheck}>글 작성</button>
       </div>
 
-      <h1>🎀게시글 목록🎀</h1>
+      <h1>🎀게시글 목록입니다~~</h1>
       <table border="1" cellPadding="10" cellSpacing="0">
         <thead>
           <tr>
