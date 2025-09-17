@@ -54,6 +54,6 @@ jobs:
             fi
       
             # 새로 실행 (nohup, 백그라운드, 로그 저장, 세션과 완전히 분리)
-            nohup java -Xms128m -Xmx512m -jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar \
+            nohup java -Xms128m -Xmx256m -jar /home/ec2-user/exam-0.0.1-SNAPSHOT.jar \
               > /home/ec2-user/app.log 2>&1 < /dev/null &
             disown
