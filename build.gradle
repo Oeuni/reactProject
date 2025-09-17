@@ -67,7 +67,13 @@ task copyReactBuildFiles(type: Copy) {
 	into "$projectDir/src/main/resources/static"
 }
 
+
+tasks.named("build") {
+	dependsOn copyReactBuildFiles
+}
+
 // processResources task에 연결
+/*
 tasks.named("processResources") {
 	dependsOn copyReactBuildFiles
 }
@@ -76,3 +82,4 @@ tasks.named("processResources") {
 tasks.named("bootRun") {
 	dependsOn copyReactBuildFiles
 }
+*/
