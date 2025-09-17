@@ -9,7 +9,7 @@ function BoardList() {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false); // 로그인 상태
   const [userId, setUserId] = useState("");        // 로그인한 사용자 아이디
-
+   // 수정 테스트입니다.~~~~~~~
   // 게시글 로딩
   useEffect(() => {
     axios
