@@ -21,6 +21,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # 2-1. Node.js 설치
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'   # 원하면 다른 버전 가능
+
+
       # 3. 실행권한 부여 및 Gradle 빌드 (jar 생성)
       - name: Make Gradle Wrapper executable
         run: chmod +x ./gradlew
