@@ -6,7 +6,7 @@ function Join() {
   const navigate = useNavigate();
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [usernm, setusernm] = useState("");
   const [checkMsg, setCheckMsg] = useState("");             // 아이디 중복확인 결과 메시지
   const [checkMsgColor, setCheckMsgColor] = useState("");   // 메시지 색상
   const [errorMsg, setErrorMsg] = useState("");             // 회원가입 실패 메시지
@@ -18,7 +18,7 @@ function Join() {
       return;
     }
     try {
-      const res = await axios.get("https://13.53.74.46:8080/user", {
+      const res = await axios.get("https://oeun.shop:8080/user", {
       //const res = await axios.get(`http://localhost:8080/user`, {
         params: { userid },
       });
@@ -40,11 +40,11 @@ function Join() {
   const handleJoin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://13.53.74.46:8080/join", {
+      const res = await axios.post("https://oeun.shop:8080/join", {
     //const res = await axios.post("http://backend:8080/join", {
         userid,
-        password,
-        username,
+        usernm,
+        password
       });
 
       if (res.data.result) {
@@ -91,8 +91,8 @@ function Join() {
           <label>이름</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={usernm}
+            onChange={(e) => setusernm(e.target.value)}
             required
           />
         </div>
