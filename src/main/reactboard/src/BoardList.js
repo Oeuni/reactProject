@@ -14,7 +14,7 @@ function BoardList() {
   useEffect(() => {
     axios
       .get("/board", { withCredentials: true })
-      //.get("http://localhost:8080/board", { withCredentials: true })
+      //.get("https://localhost:8080/board", { withCredentials: true })
       .then((response) => {
         setBoards(response.data);
         setLoading(false);
@@ -29,7 +29,7 @@ function BoardList() {
   useEffect(() => {
     axios
       .get("/auth/check", { withCredentials: true })
-      //.get("http://localhost:8080/auth/check", { withCredentials: true })
+      //.get("https://localhost:8080/auth/check", { withCredentials: true })
       .then((res) => {
         if (res.data.loggedIn) {
           setLoggedIn(true);
@@ -44,7 +44,7 @@ function BoardList() {
   // 로그아웃 처리
   const handleLogout = () => {
     axios.post("/logout", {}, { withCredentials: true })
-    //axios.post("http://localhost:8080/logout", {}, { withCredentials: true })
+    //axios.post("https://localhost:8080/logout", {}, { withCredentials: true })
       .then(() => {
         setLoggedIn(false);
         setUserId("");
@@ -87,7 +87,7 @@ function BoardList() {
         <button onClick={writeCheck}>글 작성</button>
       </div>
 
-      <h1>🎀게시글 목록입니다~~</h1>
+      <h1>🎀게시글 목록입니다🎀</h1>
       <table border="1" cellPadding="10" cellSpacing="0">
         <thead>
           <tr>
