@@ -18,7 +18,7 @@ function Join() {
       return;
     }
     try {
-      const res = await axios.get("https://13.53.74.46:8443/user", {
+      const res = await axios.get("https://13.53.74.46:8080/user", {
       //const res = await axios.get(`http://localhost:8080/user`, {
         params: { userid },
       });
@@ -40,7 +40,7 @@ function Join() {
   const handleJoin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://13.53.74.46:8443/join", {
+      const res = await axios.post("https://13.53.74.46:8080/join", {
     //const res = await axios.post("http://backend:8080/join", {
         userid,
         password,
