@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @CrossOrigin(origins = "https://oeun.shop", allowCredentials = "true")
 public class UserController {
 
